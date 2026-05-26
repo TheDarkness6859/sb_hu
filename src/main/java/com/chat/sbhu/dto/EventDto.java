@@ -1,4 +1,7 @@
 package com.chat.sbhu.dto;
 
-public class EventDto {
-}
+import com.chat.sbhu.models.Venue;
+
+import java.util.UUID;
+
+public record EventDto (UUID id, String name, Venue venue, String type) {}
