@@ -30,7 +30,9 @@ public class VenueRepository {
 
     public boolean add (Venue venue){
 
-        return database.put(venue.getId(), venue) != null;
+        database.put(venue.getId(), venue);
+
+        return true;
 
     }
 

@@ -24,13 +24,15 @@ public class EventRepository {
 
     public Event getById (UUID id){
 
-        return  database.get(id);
+        return database.get(id);
 
     }
 
     public boolean add (Event event) {
 
-        return database.put(event.getId(), event) != null;
+        database.put(event.getId(), event);
+
+        return true;
 
     }
 
