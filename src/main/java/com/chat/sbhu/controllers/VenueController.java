@@ -36,7 +36,7 @@ public class VenueController {
 
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get specific Venue",
