@@ -76,4 +76,28 @@ public class EventController {
 
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(
+            summary = "Delete Event",
+            description = "Delete a specific Event through id"
+    )
+    @ApiResponse(responseCode = "204", description = "Deleted Correctly")
+    public ResponseEntity<Void> deleteEvent (@PathVariable UUID id){
+
+        boolean deletedEvent = service.delete(id);
+
+        if (deletedEvent){
+
+            return ResponseEntity.noContent().build();
+
+        }else {
+
+            return ResponseEntity.notFound().build();
+
+        }
+
+    }
+
+
 }
