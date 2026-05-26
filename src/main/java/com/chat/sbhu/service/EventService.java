@@ -55,6 +55,7 @@ public class EventService {
 
         if (exists != null){
 
+            event.setId(id);
             return  repository.add(event);
 
         }

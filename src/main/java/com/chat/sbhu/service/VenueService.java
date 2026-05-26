@@ -61,6 +61,7 @@ public class VenueService {
 
         if (exists != null){
 
+            venue.setId(id);
             return  repository.add(venue);
 
         }
