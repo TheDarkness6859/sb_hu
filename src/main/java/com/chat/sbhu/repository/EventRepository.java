@@ -30,6 +30,12 @@ public class EventRepository {
 
     public boolean add (Event event) {
 
+        if (event.getId() == null){
+
+            event.setId(UUID.randomUUID());
+
+        }
+
         database.put(event.getId(), event);
 
         return true;

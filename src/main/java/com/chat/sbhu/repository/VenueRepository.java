@@ -30,6 +30,12 @@ public class VenueRepository {
 
     public boolean add (Venue venue){
 
+        if (venue.getId() == null){
+
+            venue.setId(UUID.randomUUID());
+
+        }
+
         database.put(venue.getId(), venue);
 
         return true;
