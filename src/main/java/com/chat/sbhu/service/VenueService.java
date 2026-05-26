@@ -54,4 +54,19 @@ public class VenueService {
         return repository.delete(id);
 
     }
+
+    public boolean edit (UUID id, Venue venue){
+
+        Venue exists = repository.getById(id);
+
+        if (exists != null){
+
+            return  repository.add(venue);
+
+        }
+
+        return false;
+
+    }
+
 }

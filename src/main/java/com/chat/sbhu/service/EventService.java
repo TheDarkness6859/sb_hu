@@ -49,6 +49,20 @@ public class EventService {
 
     }
 
+    public boolean edit (UUID id, Event event){
+
+        Event exists = repository.getById(id);
+
+        if (exists != null){
+
+            return  repository.add(event);
+
+        }
+
+        return false;
+
+    }
+
     public boolean delete (UUID id){
 
         return repository.delete(id);
