@@ -14,7 +14,6 @@ public class Venue {
     private UUID id;
     private String name;
     private String address;
-    private Event event;
     private Integer capacity;
 
 }
