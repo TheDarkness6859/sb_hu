@@ -4,6 +4,7 @@ import com.chat.sbhu.models.Venue;
 import com.chat.sbhu.service.VenueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -47,10 +47,21 @@ public class VenueController {
             summary = "Get specific Venue",
             description = "Return a specific Venue through id"
     )
-    @ApiResponse(responseCode = "200", description = "Venues recovery correctly")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Venues recovery correctly"),
+            @ApiResponse(responseCode = "404", description = "Venue not found")
+    })
     public ResponseEntity<Venue> getById (@PathVariable UUID id){
 
-        return ResponseEntity.ok(service.getById(id));
+        Venue venue = service.getById(id);
+
+        if (venue == null){
+
+            return ResponseEntity.notFound().build();
+
+        }
+
+        return ResponseEntity.ok(venue);
 
     }
 
@@ -72,7 +83,7 @@ public class VenueController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Modify Venue",
-            description = "Edit speficif Venue in the platform"
+            description = "Edit specific Venue in the platform"
     )
     @ApiResponse(responseCode = "200", description = "Venue modify correctly")
     public ResponseEntity<Boolean> editVenue (@PathVariable UUID id, @RequestBody Venue venue){
@@ -85,9 +96,12 @@ public class VenueController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Delete Venue",
-            description = "Delete specific Venue throuhg id"
+            description = "Delete specific Venue through id"
     )
-    @ApiResponse(responseCode = "204", description = "Venue deleted correctly")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Venue deleted correctly"),
+            @ApiResponse(responseCode = "404", description = "Venue not found")
+    })
     public ResponseEntity<Void> deleteVenue (@PathVariable UUID id){
 
         boolean deleted = service.delete(id);
