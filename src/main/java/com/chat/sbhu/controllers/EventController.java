@@ -4,6 +4,7 @@ import com.chat.sbhu.models.Event;
 import com.chat.sbhu.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,10 +46,21 @@ public class EventController {
             summary = "Get specific Event through id",
             description = "Find the specific Event in our platform through id"
     )
-    @ApiResponse(responseCode = "200", description = "Event recovery correctly")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Event recovery correctly"),
+            @ApiResponse(responseCode = "404", description = "Event not found")
+    })
     public ResponseEntity<Event> getById(@PathVariable UUID id){
 
-        return ResponseEntity.ok(service.getById(id));
+        Event event = service.getById(id);
+
+        if (event == null){
+
+            return ResponseEntity.notFound().build();
+
+        }
+
+        return ResponseEntity.ok(event);
 
     }
 
@@ -85,7 +97,10 @@ public class EventController {
             summary = "Delete Event",
             description = "Delete a specific Event through id"
     )
-    @ApiResponse(responseCode = "204", description = "Deleted Correctly")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Deleted Correctly"),
+            @ApiResponse(responseCode = "404", description = "Event not found")
+    })
     public ResponseEntity<Void> deleteEvent (@PathVariable UUID id){
 
         boolean deletedEvent = service.delete(id);
