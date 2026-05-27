@@ -1,6 +1,9 @@
 package com.chat.sbhu.repository;
 
 import com.chat.sbhu.models.Venue;
+import com.chat.sbhu.repository.persistance.VenueDatabase;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -8,29 +11,27 @@ import java.util.*;
 @Repository
 public class VenueRepository {
 
-    private final Map<UUID, Venue> database = new HashMap<>();
+    private final VenueDatabase dataBase;
 
-    public List<Venue> getAll () {
+    public VenueRepository (VenueDatabase dataBase){
+        this.dataBase = dataBase;
+    }
 
-        if (database.isEmpty()){
+    public Page<Venue> getAllPaginated (Pageable pageable) {
 
-            return null;
-
-        }
-
-        return new ArrayList<>(database.values());
+        return dataBase.findAll(pageable);
 
     }
 
     public Venue getById (UUID id){
 
-        return database.get(id);
+        return dataBase.getReferenceById(id);
 
     }
 
     public Venue getByName (String name){
 
-        return database.values()
+        return dataBase.findAll()
                 .stream()
                 .filter(venue -> name.equalsIgnoreCase(venue.getName()))
                 .findFirst()
@@ -41,13 +42,7 @@ public class VenueRepository {
 
     public boolean add (Venue venue){
 
-        if (venue.getId() == null){
-
-            venue.setId(UUID.randomUUID());
-
-        }
-
-        database.put(venue.getId(), venue);
+        dataBase.save(venue);
 
         return true;
 
@@ -55,7 +50,9 @@ public class VenueRepository {
 
     public boolean delete (UUID id){
 
-        return database.remove(id) != null;
+       dataBase.deleteById(id);
+
+       return true;
 
     }
 
