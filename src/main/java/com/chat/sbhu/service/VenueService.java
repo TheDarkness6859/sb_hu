@@ -2,9 +2,10 @@ package com.chat.sbhu.service;
 
 import com.chat.sbhu.models.Venue;
 import com.chat.sbhu.repository.VenueRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,9 +31,9 @@ public class VenueService {
 
     }
 
-    public List<Venue> getAll () {
+    public Page<Venue> getAll (Pageable pageable) {
 
-        return repository.getAll();
+        return repository.getAllPaginated(pageable);
 
     }
 
