@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+
+body {
+    font-family: 'Lora', serif;
+    background-color: #fafafa;
+    color: #111111;
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+    line-height: 1.6;
+}
+
+h1 {
+    font-size: 2.2rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 15px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 15px;
+}
+
+.header-container h1 {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+.table-container {
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 14px 18px;
+    font-size: 15px;
+}
+
+th {
+    background-color: #f7f7f7;
+    font-weight: 600;
+    color: #444444;
+    border-bottom: 1px solid #eaeaea;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+}
+
+td {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: #fcfcfc;
+}
+
+.uuid-text {
+    font-family: monospace;
+    color: #666666;
+    font-size: 13px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px;
+    background: #ffffff;
+    border: 1px dashed #cccccc;
+    border-radius: 8px;
+    color: #777777;
+    font-style: italic;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+}
+
+.info {
+    font-size: 14px;
+    color: #555555;
+}
+
+.info span {
+    font-weight: 600;
+    color: #111111;
+}
+
+.pagination-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.page-number {
+    font-size: 14px;
+    color: #444444;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid #111111;
+}
+
+.btn-primary {
+    background-color: #111111;
+    color: #ffffff;
+    border-color: #111111;
+}
+
+.btn-primary:hover {
+    background-color: #333333;
+    border-color: #333333;
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: #111111;
+    border-color: #eaeaea;
+}
+
+.btn-secondary:hover {
+    background-color: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.btn.disabled {
+    background-color: #ffffff;
+    color: #a0a0a0;
+    border: 1px solid #eaeaea;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: fadeInModal 0.2s ease-out;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #888888;
+    user-select: none;
+}
+
+.close-btn:hover {
+    color: #111111;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #111111;
+}
+
+#toggle-event-form:checked ~ .event-modal {
+    display: flex !important;
+}
+
+#toggle-venue-form:checked ~ .venue-modal {
+    display: flex !important;
+}
+
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
