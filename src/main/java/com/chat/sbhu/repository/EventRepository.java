@@ -1,6 +1,9 @@
 package com.chat.sbhu.repository;
 
 import com.chat.sbhu.models.Event;
+import com.chat.sbhu.repository.persistance.EventDatabase;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -8,29 +11,27 @@ import java.util.*;
 @Repository
 public class EventRepository {
 
-    private final Map<UUID, Event> database = new HashMap<>();
+    private final EventDatabase dataBase;
 
-    public List<Event> getAll () {
+    public EventRepository(EventDatabase dataBase){
+        this.dataBase = dataBase;
+    }
 
-        if (database.isEmpty()){
+    public Page<Event> getAllPaginated (Pageable pageable) {
 
-            return null;
-
-        }
-
-        return new ArrayList<>(database.values());
+        return dataBase.findAll(pageable);
 
     }
 
     public Event getById (UUID id){
 
-        return database.get(id);
+        return dataBase.getReferenceById(id);
 
     }
 
     public Event getByName (String name){
 
-        return database.values()
+        return dataBase.findAll()
                 .stream()
                 .filter(event -> name.equalsIgnoreCase(event.getName()))
                 .findFirst()
@@ -41,13 +42,7 @@ public class EventRepository {
 
     public boolean add (Event event) {
 
-        if (event.getId() == null){
-
-            event.setId(UUID.randomUUID());
-
-        }
-
-        database.put(event.getId(), event);
+        dataBase.save(event);
 
         return true;
 
@@ -55,7 +50,9 @@ public class EventRepository {
 
     public boolean delete (UUID id){
 
-        return database.remove(id) != null;
+        dataBase.deleteById(id);
+
+        return true;
 
     }
 
