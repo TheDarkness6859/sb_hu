@@ -12,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -70,11 +73,14 @@ class EventServiceTest {
     @Test
     @DisplayName("Scenario 3: Empty Catalog Query (Edge Case)")
     void getAllEventsWhenDatabaseIsEmpty() {
-        when(eventRepository.getAll()).thenReturn(null);
 
-        List<Event> result = eventService.getAll();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(eventRepository.getAllPaginated(any(Pageable.class))).thenReturn(null);
+
+        Page<Event> result = eventService.getAll(pageable);
 
         assertNull(result);
-        verify(eventRepository, times(1)).getAll();
+        verify(eventRepository, times(1)).getAllPaginated(pageable);
     }
 }
