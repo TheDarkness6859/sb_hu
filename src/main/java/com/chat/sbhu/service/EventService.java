@@ -4,9 +4,10 @@ import com.chat.sbhu.models.Event;
 import com.chat.sbhu.models.Venue;
 import com.chat.sbhu.repository.EventRepository;
 import com.chat.sbhu.repository.VenueRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,9 +35,9 @@ public class EventService {
 
     }
 
-    public List<Event> getAll () {
+    public Page<Event> getAll (Pageable pageable) {
 
-        return repository.getAll();
+        return repository.getAllPaginated(pageable);
 
     }
 
