@@ -28,6 +28,17 @@ public class VenueRepository {
 
     }
 
+    public Venue getByName (String name){
+
+        return database.values()
+                .stream()
+                .filter(venue -> name.equalsIgnoreCase(venue.getName()))
+                .findFirst()
+                .orElse(null)
+        ;
+
+    }
+
     public boolean add (Venue venue){
 
         if (venue.getId() == null){

@@ -28,6 +28,17 @@ public class EventRepository {
 
     }
 
+    public Event getByName (String name){
+
+        return database.values()
+                .stream()
+                .filter(event -> name.equalsIgnoreCase(event.getName()))
+                .findFirst()
+                .orElse(null)
+        ;
+
+    }
+
     public boolean add (Event event) {
 
         if (event.getId() == null){
