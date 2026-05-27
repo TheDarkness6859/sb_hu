@@ -5,11 +5,13 @@ import com.chat.sbhu.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,12 +29,13 @@ public class EventController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get all Events in the platform",
-            description = "Return a list of all Events in the platform"
+            description = "Return the events catalog with pagination and sorting"
     )
     @ApiResponse(responseCode = "200", description = "List of Events recovery correctly")
-    public ResponseEntity<List<Event>> getEvents (){
+    public ResponseEntity<Page<Event>> getEvents (
+            @PageableDefault(page = 0, size = 10, sort = "name") Pageable pageable){
 
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(service.getAll(pageable));
 
     }
 

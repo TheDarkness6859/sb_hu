@@ -5,6 +5,9 @@ import com.chat.sbhu.service.VenueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +33,11 @@ public class VenueController {
             description = "Return a list of all Venues in the platform"
     )
     @ApiResponse(responseCode = "200", description = "List of venue get correctly")
-    public ResponseEntity<List<Venue>> getAll () {
+    public ResponseEntity<Page<Venue>> getAll (
+            @PageableDefault(page = 0, size = 10, sort = "name")Pageable pageable
+            ) {
 
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(service.getAll(pageable));
 
     }
 
