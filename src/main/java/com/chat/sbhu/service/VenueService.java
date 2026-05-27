@@ -31,6 +31,12 @@ public class VenueService {
 
     }
 
+    public Venue getByName (String name){
+
+        return repository.getByName(name);
+
+    }
+
     public Page<Venue> getAll (Pageable pageable) {
 
         return repository.getAllPaginated(pageable);
