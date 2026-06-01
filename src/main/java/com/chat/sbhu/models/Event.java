@@ -2,6 +2,7 @@ package com.chat.sbhu.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLRestriction("active = true")
 public class Event {
 
     @Id
@@ -21,11 +23,18 @@ public class Event {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venue_id", referencedColumnName = "id", nullable = false)
     private Venue venue;
 
     @Column(nullable = false, length = 30)
     private String type;
+
+    @Column(nullable = false)
+    private boolean active = true;
+
+    public void softDelete(){
+        this.active = false;
+    }
 
 }
