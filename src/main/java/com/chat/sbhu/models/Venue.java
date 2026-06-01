@@ -1,5 +1,6 @@
 package com.chat.sbhu.models;
 
+import com.chat.sbhu.models.enums.City;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,10 @@ public class Venue {
 
     @Column(nullable = false, length = 100)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private City city;
 
     @Column(nullable = false, length = 40)
     private String address;
