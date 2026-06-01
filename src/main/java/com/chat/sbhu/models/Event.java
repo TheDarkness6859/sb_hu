@@ -37,9 +37,6 @@ public class Event {
     )
     private Set<Category> categories;
 
-    @Column(nullable = false, length = 30)
-    private String type;
-
     @Column(nullable = false)
     private boolean active = true;
 
