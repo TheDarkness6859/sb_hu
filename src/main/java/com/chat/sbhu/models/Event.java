@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,6 +42,9 @@ public class Event {
 
     @Column(nullable = false)
     private boolean active = true;
+
+    @Column(nullable = false)
+    private LocalDateTime date;
 
     public void softDelete(){
         this.active = false;
