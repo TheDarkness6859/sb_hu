@@ -1,59 +1,21 @@
 package com.chat.sbhu.repository;
 
+import com.chat.sbhu.dto.EventDto;
 import com.chat.sbhu.models.Event;
-import com.chat.sbhu.repository.persistance.EventDatabase;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.UUID;
 
 @Repository
-public class EventRepository {
+public interface EventRepository extends JpaRepository<Event, UUID> {
 
-    private final EventDatabase dataBase;
-
-    public EventRepository(EventDatabase dataBase){
-        this.dataBase = dataBase;
-    }
-
-    public Page<Event> getAllPaginated (Pageable pageable) {
-
-        return dataBase.findAll(pageable);
-
-    }
-
-    public Event getById (UUID id){
-
-        return dataBase.getReferenceById(id);
-
-    }
-
-    public Event getByName (String name){
-
-        return dataBase.findAll()
-                .stream()
-                .filter(event -> name.equalsIgnoreCase(event.getName()))
-                .findFirst()
-                .orElse(null)
-        ;
-
-    }
-
-    public boolean add (Event event) {
-
-        dataBase.save(event);
-
-        return true;
-
-    }
-
-    public boolean delete (UUID id){
-
-        dataBase.deleteById(id);
-
-        return true;
-
-    }
+    @Query("SELECT new com.chat.sbhu.dto.EventDto(e.id, e.name, v.name, e.date, v.city) " +
+            "FROM Event e JOIN e.venue v " +
+            "ORDER BY e.date DESC")
+    Slice<EventDto> findEventCatalog(Pageable pageable);
 
 }
