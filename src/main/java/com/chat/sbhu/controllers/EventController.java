@@ -1,14 +1,13 @@
 package com.chat.sbhu.controllers;
 
+import com.chat.sbhu.dto.EventDto;
 import com.chat.sbhu.models.Event;
 import com.chat.sbhu.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +32,11 @@ public class EventController {
             description = "Return the events catalog with pagination and sorting"
     )
     @ApiResponse(responseCode = "200", description = "List of Events recovery correctly")
-    public ResponseEntity<Page<Event>> getEvents (
-            @PageableDefault(page = 0, size = 10, sort = "name") Pageable pageable){
+    public ResponseEntity<Slice<EventDto>> getEvents (
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
 
-        return ResponseEntity.ok(service.getAll(pageable));
+        return ResponseEntity.ok(service.getCatalog(page, size));
 
     }
 
@@ -50,9 +50,9 @@ public class EventController {
             @ApiResponse(responseCode = "200", description = "Event recovery correctly"),
             @ApiResponse(responseCode = "404", description = "Event not found")
     })
-    public ResponseEntity<Event> getById(@PathVariable UUID id){
+    public ResponseEntity<EventDto> getById(@PathVariable UUID id){
 
-        Event event = service.getById(id);
+        EventDto event = service.getById(id);
 
         if (event == null){
 
@@ -71,10 +71,13 @@ public class EventController {
             description = "Save a new Event in the platform."
     )
     @ApiResponse(responseCode = "201", description = "Event created correctly")
-    public ResponseEntity<Event> addEvent (@RequestBody Event event){
+    public ResponseEntity<EventDto> addEvent (@RequestBody Event event){
 
-        service.add(event);
-        return new ResponseEntity<>(event, HttpStatus.CREATED);
+        Event e = service.add(event);
+
+        EventDto dto = new EventDto(e.getId(), e.getName(), e.getVenue().getName(), e.getDate(), e.getVenue().getCity());
+
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
 
     }
 
@@ -85,9 +88,13 @@ public class EventController {
             description = "Allow modify Event through id"
     )
     @ApiResponse(responseCode = "200", description = "Event modify correctly")
-    public ResponseEntity<Boolean> edit (@PathVariable UUID id, @RequestBody Event event){
+    public ResponseEntity<EventDto> edit (@PathVariable UUID id, @RequestBody Event event){
 
-        return ResponseEntity.ok(service.edit(id, event));
+        Event e = service.edit(id, event);
+
+        EventDto dto = new EventDto(e.getId(), e.getName(), e.getVenue().getName(), e.getDate(), e.getVenue().getCity());
+
+        return ResponseEntity.ok(dto);
 
     }
 
