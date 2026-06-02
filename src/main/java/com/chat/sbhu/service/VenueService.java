@@ -2,6 +2,7 @@ package com.chat.sbhu.service;
 
 import com.chat.sbhu.models.Venue;
 import com.chat.sbhu.repository.VenueRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class VenueService {
 
         if (id != null){
 
-            return repository.getById(id);
+            return repository.getReferenceById(id);
 
         }
 
@@ -33,7 +34,7 @@ public class VenueService {
 
     public Venue getByName (String name){
 
-        return repository.getByName(name);
+        return repository.getByName(name).orElse(null);
 
     }
 
@@ -44,36 +45,38 @@ public class VenueService {
     }
 
 
-    public boolean add (Venue event){
+    public Venue add (Venue event){
 
         if (event != null){
 
-            return repository.add(event);
+            return repository.save(event);
 
         }
 
-        return false;
+        return null;
 
     }
 
+    @Transactional
     public boolean delete (UUID id){
 
-        return repository.delete(id);
+        repository.deleteById(id);
+
+        return true;
 
     }
 
-    public boolean edit (UUID id, Venue venue){
+    @Transactional
+    public Venue edit (UUID id, Venue venue){
 
-        Venue exists = repository.getById(id);
+        Venue exists = repository.getReferenceById(id);
 
-        if (exists != null){
+        exists.setName(venue.getName());
+        exists.setCapacity(venue.getCapacity());
+        exists.setAddress(venue.getAddress());
+        exists.setCity(venue.getCity());
 
-            venue.setId(id);
-            return  repository.add(venue);
-
-        }
-
-        return false;
+        return exists;
 
     }
 
