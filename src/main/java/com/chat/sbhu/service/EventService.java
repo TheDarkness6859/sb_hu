@@ -1,11 +1,13 @@
 package com.chat.sbhu.service;
 
+import com.chat.sbhu.dto.EventDto;
 import com.chat.sbhu.models.Event;
 import com.chat.sbhu.models.Venue;
 import com.chat.sbhu.repository.EventRepository;
 import com.chat.sbhu.repository.VenueRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,11 +25,12 @@ public class EventService {
 
     }
 
-    public Event getById (UUID id){
+    public EventDto getById (UUID id){
 
         if (id != null){
 
-            return repository.getById(id);
+            Event e = repository.getReferenceById(id);
+            return new EventDto(e.getId(), e.getName(), e.getVenue().getName(), e.getDate(), e.getVenue().getCity());
 
         }
 
@@ -35,58 +38,57 @@ public class EventService {
 
     }
 
-    public Page<Event> getAll (Pageable pageable) {
+    public Slice<EventDto> getCatalog (int page, int size){
 
-        return repository.getAllPaginated(pageable);
+        return repository.findEventCatalog(PageRequest.of(page, size));
 
     }
 
 
-    public boolean add (Event event){
+    public Event add (Event event){
 
-        if (event == null){
-            return false;
+        if (event == null || event.getVenue() == null){
+            throw new IllegalArgumentException("Invalid data");
         }
 
-        if (event.getVenue() == null){
-            return false;
-        }
-
-        Venue venue = venueRepository.getByName(event.getVenue().getName());
-        if (venue == null){
-            return false;
-        }
+        Venue venue = venueRepository.getByName(event.getVenue().getName())
+                .orElseThrow(() -> new RuntimeException("The Venue don't exits"));
 
         event.setVenue(venue);
-        return repository.add(event);
+
+        return repository.save(event);
 
     }
 
-    public boolean edit (UUID id, Event event){
+    @Transactional
+    public Event edit (UUID id, Event event){
 
-        Event exists = repository.getById(id);
-        if (exists == null){
-            return false;
-        }
+        Event exists = repository.getReferenceById(id);
 
         if (event.getVenue() == null){
-            return false;
+            throw new IllegalArgumentException("The Venue is required");
         }
 
-        Venue venue = venueRepository.getByName(event.getVenue().getName());
-        if (venue == null){
-            return false;
-        }
+        Venue venue = venueRepository.getByName(event.getVenue().getName())
+                .orElseThrow(() -> new RuntimeException("The Venue don't exits"));
 
-        event.setId(id);
-        event.setVenue(venue);
-        return repository.add(event);
+        exists.setName(event.getName());
+        exists.setCategories(event.getCategories());
+        exists.setVenue(venue);
+
+        return exists;
 
     }
 
+    @Transactional
     public boolean delete (UUID id){
 
-        return repository.delete(id);
+        Event event = repository.getReferenceById(id);
+
+        if (event == null) return false;
+
+        event.softDelete();
+        return true;
 
     }
 
