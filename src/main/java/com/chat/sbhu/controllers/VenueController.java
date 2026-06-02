@@ -86,7 +86,7 @@ public class VenueController {
             description = "Edit specific Venue in the platform"
     )
     @ApiResponse(responseCode = "200", description = "Venue modify correctly")
-    public ResponseEntity<Boolean> editVenue (@PathVariable UUID id, @RequestBody Venue venue){
+    public ResponseEntity<Venue> editVenue (@PathVariable UUID id, @RequestBody Venue venue){
 
         return ResponseEntity.ok(service.edit(id, venue));
 
