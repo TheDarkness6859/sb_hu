@@ -26,10 +26,15 @@
                 <label>Venue Name:</label>
                 <input type="text" name="venue.name" required placeholder="e.g., Tremendo">
             </div>
+
             <div class="form-group">
-                <label>Type:</label>
-                <input type="text" name="type" required placeholder="e.g., Musical, Cultural">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold;">Categories:</label>
+                <div th:each="cat : ${allCategories}" style="display: inline-block; margin-right: 15px; margin-bottom: 5px;">
+                    <input type="checkbox" th:value="${cat.id}" name="categories" th:id="'cat-' + ${cat.id}">
+                    <label th:for="'cat-' + ${cat.id}" th:text="${cat.name}" style="font-weight: normal; cursor: pointer;">Category</label>
+                </div>
             </div>
+
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Save Event</button>
         </form>
     </div>
@@ -48,6 +53,15 @@
                 <label>Address:</label>
                 <input type="text" name="address" required placeholder="e.g., Calle 67 # 52-20">
             </div>
+
+            <div class="form-group">
+                <label>City:</label>
+                <select name="city" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="" disabled selected>Select a city...</option>
+                    <option th:each="cityOpt : ${cities}" th:value="${cityOpt.name()}" th:text="${cityOpt.name()}"></option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label>Capacity:</label>
                 <input type="number" name="capacity" required placeholder="e.g., 350">
@@ -67,27 +81,32 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Type</th>
             <th>Venue</th>
+            <th>City</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="event : ${events}">
             <td class="uuid-text" th:text="${event.id}">00000000</td>
             <td th:text="${event.name}">Rock Concert</td>
-            <td th:text="${event.type}">Musical</td>
-            <td th:text="${event.venue != null ? event.venue.name : 'No Venue'}">Tremendo</td>
+            <td th:text="${event.venueName}">Tremendo</td>
+            <td th:text="${event.city}">Medellín</td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<div class="pagination-container" th:if="${totalPages > 1}">
-    <div class="info">Total Items: <span th:text="${totalItems}">0</span></div>
-    <div class="pagination-actions">
-        <a th:if="${currentPage > 0}" th:href="@{/admin/events(page=${currentPage - 1})}" class="btn">Previous</a>
-        <span class="page-number" th:text="'Page ' + (${currentPage} + 1) + ' of ' + ${totalPages}">Page 1 of 1</span>
-        <a th:if="${currentPage < totalPages - 1}" th:href="@{/admin/events(page=${currentPage + 1})}" class="btn">Next</a>
+<div class="pagination-container">
+    <div class="pagination-actions" style="display: flex; gap: 10px; align-items: center; margin-top: 15px;">
+
+        <a th:if="${slice.hasPrevious()}" th:href="@{/admin/events(page=${currentPage - 1}, size=${slice.size})}" class="btn">Previous</a>
+        <span th:unless="${slice.hasPrevious()}" class="btn disabled" style="opacity: 0.5; cursor: not-allowed;">Previous</span>
+
+        <span class="page-number" th:text="'Page ' + (${currentPage} + 1)">Page 1</span>
+
+        <a th:if="${slice.hasNext()}" th:href="@{/admin/events(page=${currentPage + 1}, size=${slice.size})}" class="btn">Next</a>
+        <span th:unless="${slice.hasNext()}" class="btn disabled" style="opacity: 0.5; cursor: not-allowed;">Next</span>
+
     </div>
 </div>
 
