@@ -33,9 +33,25 @@ public class WebEventController {
     public String getEvents (
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchName,
+            @RequestParam(required = false) City searchCity,
             Model model){
 
-        Slice<EventDto> eventSlice = service.getCatalog(page, size);
+        Slice<EventDto> eventSlice;
+
+        if ((searchName != null && !searchName.trim().isEmpty()) || searchCity != null) {
+
+            String cleanedName = (searchName != null) ? searchName.trim() : null;
+            eventSlice = service.searchEvents(cleanedName, searchCity, page, size);
+
+            model.addAttribute("searchName", searchName);
+            model.addAttribute("searchCity", searchCity);
+
+        }else {
+
+            eventSlice = service.getCatalog(page, size);
+
+        }
 
         model.addAttribute("events", eventSlice.getContent());
         model.addAttribute("currentPage", page);
