@@ -10,6 +10,39 @@
 
 <div th:replace="~{layout/components :: navbar}"></div>
 
+<div class="header-container" style="margin-top: 20px;">
+    <h1>Event Dashboard</h1>
+    <div class="actions" style="display: flex; gap: 10px;">
+        <label for="toggle-event-form" class="btn btn-primary" style="cursor: pointer;">New Event</label>
+        <label for="toggle-venue-form" class="btn btn-primary" style="cursor: pointer;">New Venue</label>
+    </div>
+</div>
+
+<div class="search-container" style="background: #ffffff; border: 1px solid #eaeaea; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+    <form th:action="@{/admin/events}" method="GET" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+            <label>Search by Name:</label>
+            <input type="text" name="searchName" th:value="${searchName}" placeholder="e.g., Twenty One Pilots...">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0; min-width: 180px;">
+            <label>City Zone:</label>
+            <select name="searchCity" style="width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #eaeaea; font-family: inherit; font-size: 14px; background-color: #fff;">
+                <option value="">All Cities</option>
+                <option th:each="cityOpt : ${cities}"
+                        th:value="${cityOpt.name()}"
+                        th:text="${cityOpt.name()}"
+                        th:selected="${cityOpt == searchCity}"></option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Filter</button>
+            <a th:href="@{/admin/events}" class="btn btn-secondary" style="padding: 10px 20px; text-align: center;">Clear</a>
+        </div>
+    </form>
+</div>
+
 <input type="checkbox" id="toggle-event-form" class="form-toggle" style="display: none;">
 <input type="checkbox" id="toggle-venue-form" class="form-toggle" style="display: none;">
 
@@ -56,7 +89,7 @@
 
             <div class="form-group">
                 <label>City:</label>
-                <select name="city" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                <select name="city" required style="width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #eaeaea; font-family: inherit; font-size: 14px; background-color: #fff;">
                     <option value="" disabled selected>Select a city...</option>
                     <option th:each="cityOpt : ${cities}" th:value="${cityOpt.name()}" th:text="${cityOpt.name()}"></option>
                 </select>
@@ -97,15 +130,20 @@
 </div>
 
 <div class="pagination-container">
+    <div class="info">Page <span th:text="${currentPage + 1}">1</span></div>
     <div class="pagination-actions" style="display: flex; gap: 10px; align-items: center; margin-top: 15px;">
 
-        <a th:if="${slice.hasPrevious()}" th:href="@{/admin/events(page=${currentPage - 1}, size=${slice.size})}" class="btn">Previous</a>
-        <span th:unless="${slice.hasPrevious()}" class="btn disabled" style="opacity: 0.5; cursor: not-allowed;">Previous</span>
+        <a th:if="${slice.hasPrevious()}"
+           th:href="@{/admin/events(page=${currentPage - 1}, size=${slice.size}, searchName=${searchName}, searchCity=${searchCity})}"
+           class="btn btn-secondary">Previous</a>
+        <span th:unless="${slice.hasPrevious()}" class="btn disabled">Previous</span>
 
         <span class="page-number" th:text="'Page ' + (${currentPage} + 1)">Page 1</span>
 
-        <a th:if="${slice.hasNext()}" th:href="@{/admin/events(page=${currentPage + 1}, size=${slice.size})}" class="btn">Next</a>
-        <span th:unless="${slice.hasNext()}" class="btn disabled" style="opacity: 0.5; cursor: not-allowed;">Next</span>
+        <a th:if="${slice.hasNext()}"
+           th:href="@{/admin/events(page=${currentPage + 1}, size=${slice.size}, searchName=${searchName}, searchCity=${searchCity})}"
+           class="btn btn-secondary">Next</a>
+        <span th:unless="${slice.hasNext()}" class="btn disabled">Next</span>
 
     </div>
 </div>
