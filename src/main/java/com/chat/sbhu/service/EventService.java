@@ -3,10 +3,12 @@ package com.chat.sbhu.service;
 import com.chat.sbhu.dto.EventDto;
 import com.chat.sbhu.models.Event;
 import com.chat.sbhu.models.Venue;
+import com.chat.sbhu.models.enums.City;
 import com.chat.sbhu.repository.EventRepository;
 import com.chat.sbhu.repository.VenueRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,13 @@ public class EventService {
 
     }
 
+    @Transactional
+    public Slice<EventDto> searchEvents(String name, City city, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return repository.findAdvancedEvents(name, city, pageable);
+    }
 
     public Event add (Event event){
 
